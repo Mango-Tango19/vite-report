@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Grid, Typography } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import { Box } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
@@ -12,6 +12,8 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import Checkbox from "@mui/material/Checkbox";
+import AutocompleteTemp from "../autocomplete-template/Autocomplite-temp";
 
 const HelpTooltip = styled(({ className, ...props }) => (
 	<Tooltip
@@ -56,10 +58,10 @@ const HelpTooltip = styled(({ className, ...props }) => (
 }));
 
 const reportOptions = [
-	{ label: "Табель сотрудника", id: 1 },
-	{ label: "Табель по проекту", id: 2 },
-	{ label: "Табель по отделу", id: 3 },
-	{ label: "Итоговый отчёт по отделу", id: 4 },
+	"Табель сотрудника",
+	"Табель по проекту",
+	"Табель по отделу",
+	"Итоговый отчёт по отделу",
 ];
 
 const monthList = [
@@ -76,7 +78,15 @@ const monthList = [
 	"Декабрь",
 ];
 
-const names = [];
+const label = { inputProps: { "aria-label": "Checkbox demo" } };
+
+const DepartmentCheckbox = () => {
+	return (
+		<div>
+			<Checkbox {...label} />
+		</div>
+	);
+};
 
 const MonthSelect = ({ month, setMonth }) => {
 	const handleChange = (e) => {
@@ -121,18 +131,13 @@ const ReportSelect = ({ reportName, setReportName }) => {
 					label='Табель'
 					onChange={handleChange}
 				>
-					<MenuItem value={"Табель сотрудника"}>
-						Табель сотрудника
-					</MenuItem>
-					<MenuItem value={"Табель по проекту"}>
-						Табель по проекту
-					</MenuItem>
-					<MenuItem value={"Табель по отделу"}>
-						Табель по отделу
-					</MenuItem>
-					<MenuItem value={"Итоговый отчёт по отделу"}>
-						Итоговый отчёт по отделу
-					</MenuItem>
+					{reportOptions.map((item, idx) => {
+						return (
+							<MenuItem key={idx} value={item}>
+								{item}
+							</MenuItem>
+						);
+					})}
 				</Select>
 			</FormControl>
 		</Box>
@@ -143,6 +148,7 @@ const initialValues = {
 	reportName: "",
 	name: "",
 	month: "",
+	departmentCheckbox: false,
 };
 
 function WorkReports() {
@@ -174,8 +180,8 @@ function WorkReports() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		let formData = new FormData();
-		sendData(formData);
+		debugger;
+		sendData(formValues);
 		// formData.append('json1', JSON.stringify(jsonData1));
 
 		// fetch("https://jsonplaceholder.typicode.com/posts", {
@@ -197,8 +203,15 @@ function WorkReports() {
 		setFormValues((prev) => ({ ...prev, month }));
 	};
 
+	const setNameValue = () => {};
+
 	return (
-		<Stack spacing={2}>
+		<Stack
+			spacing={2}
+			direction='column'
+			justifyContent='center'
+			alignItems='center'
+		>
 			<Typography variant='h5' align='center'>
 				Выгрузка отчётов
 			</Typography>
@@ -212,7 +225,11 @@ function WorkReports() {
 				<Typography variant='span'>Выберите табель</Typography>
 				<HelpTooltip />
 			</Box>
-			<Box component='form' onSubmit={handleSubmit}>
+			<Box
+				component='form'
+				onSubmit={handleSubmit}
+				sx={{ width: "50vw" }}
+			>
 				<Grid container spacing={2}>
 					<Grid item sm={6}>
 						<ReportSelect
@@ -228,7 +245,7 @@ function WorkReports() {
 						/>
 					</Grid>
 					<Grid item sm={6}>
-						{formValues.reportName == "Табель сотрудника" ? (
+						{/* {formValues.reportName == "Табель сотрудника" ? (
 							<NamesSelector />
 						) : null}
 
@@ -237,13 +254,26 @@ function WorkReports() {
 						) : null}
 
 						{formValues.reportName == "Табель по отделу" ? (
-							<DepartmentSelector />
+							<Box>
+								<DepartmentSelector />
+								<DepartmentCheckbox />
+							</Box>
 						) : null}
 
 						{formValues.reportName == "Итоговый отчёт по отделу" ? (
-							<DepartmentTotalSelector />
-						) : null}
+							<Box>
+								<DepartmentTotalSelector />
+								<DepartmentCheckbox />
+							</Box>
+						) : null} */}
+						<AutocompleteTemp
+							endpoint='Names'
+							setSelectData={setNameValue}
+						/>
 					</Grid>
+					{/* <Button type='submit' variant='contained'>
+						Подготовить
+					</Button> */}
 				</Grid>
 			</Box>
 		</Stack>

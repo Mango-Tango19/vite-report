@@ -14,6 +14,8 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
 import AutocompleteTemp from "../autocomplete-template/Autocomplite-temp";
+import { useForm } from "react-hook-form";
+import { ReportSelect, MonthSelect } from "../select-template/SelectMenus";
 
 const HelpTooltip = styled(({ className, ...props }) => (
 	<Tooltip
@@ -57,27 +59,6 @@ const HelpTooltip = styled(({ className, ...props }) => (
 	},
 }));
 
-const reportOptions = [
-	"Табель сотрудника",
-	"Табель по проекту",
-	"Табель по отделу",
-	"Итоговый отчёт по отделу",
-];
-
-const monthList = [
-	"Январь",
-	"Февраль",
-	"Март",
-	"Апрель",
-	"Май",
-	"Июнь",
-	"Июль",
-	"Август",
-	"Сентябрь",
-	"Ноябрь",
-	"Декабрь",
-];
-
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 const DepartmentCheckbox = () => {
@@ -88,120 +69,124 @@ const DepartmentCheckbox = () => {
 	);
 };
 
-const MonthSelect = ({ month, setMonth }) => {
-	const handleChange = (e) => {
-		setMonth(e.target.value);
-	};
-	return (
-		<Box>
-			<FormControl fullWidth>
-				<InputLabel id='month-select-label'>Месяц</InputLabel>
-				<Select
-					labelId='month-select-label'
-					id='month-select'
-					value={month}
-					label='Месяц'
-					onChange={handleChange}
-				>
-					{monthList.map((item, idx) => {
-						return (
-							<MenuItem key={idx} value={item}>
-								{item}
-							</MenuItem>
-						);
-					})}
-				</Select>
-			</FormControl>
-		</Box>
-	);
-};
+// const MonthSelect = ({ month, setMonth }) => {
+// 	const handleChange = (e) => {
+// 		setMonth(e.target.value);
+// 	};
+// 	return (
+// 		<Box>
+// 			<FormControl fullWidth>
+// 				<InputLabel id='month-select-label'>Месяц</InputLabel>
+// 				<Select
+// 					labelId='month-select-label'
+// 					id='month-select'
+// 					value={month}
+// 					label='Месяц'
+// 					onChange={handleChange}
+// 				>
+// 					{monthList.map((item, idx) => {
+// 						return (
+// 							<MenuItem key={idx} value={item}>
+// 								{item}
+// 							</MenuItem>
+// 						);
+// 					})}
+// 				</Select>
+// 			</FormControl>
+// 		</Box>
+// 	);
+// };
 
-const ReportSelect = ({ reportName, setReportName }) => {
-	const handleChange = (e) => {
-		setReportName(e.target.value);
-	};
-	return (
-		<Box>
-			<FormControl fullWidth>
-				<InputLabel id='report-select-label'>Табель</InputLabel>
-				<Select
-					labelId='report-select-label'
-					id='report-select'
-					value={reportName}
-					label='Табель'
-					onChange={handleChange}
-				>
-					{reportOptions.map((item, idx) => {
-						return (
-							<MenuItem key={idx} value={item}>
-								{item}
-							</MenuItem>
-						);
-					})}
-				</Select>
-			</FormControl>
-		</Box>
-	);
-};
+// const ReportSelect = ({ reportName, setReportName }) => {
+// 	const handleChange = (e) => {
+// 		setReportName(e.target.value);
+// 	};
+// 	return (
+// 		<Box>
+// 			<FormControl fullWidth>
+// 				<InputLabel id='report-select-label'>Табель</InputLabel>
+// 				<Select
+// 					labelId='report-select-label'
+// 					id='report-select'
+// 					value={reportName}
+// 					label='Табель'
+// 					onChange={handleChange}
+// 				>
+// 					{reportOptions.map((item, idx) => {
+// 						return (
+// 							<MenuItem key={idx} value={item}>
+// 								{item}
+// 							</MenuItem>
+// 						);
+// 					})}
+// 				</Select>
+// 			</FormControl>
+// 		</Box>
+// 	);
+// };
 
 const initialValues = {
-	reportName: "",
+	reportType: "",
 	name: "",
 	month: "",
 	departmentCheckbox: false,
 };
 
 function WorkReports() {
-	const [formValues, setFormValues] = React.useState(initialValues);
+	//const [formValues, setFormValues] = React.useState(initialValues);
 
-	const sendData = async (formData) => {
-		let post = await fetch("https://jsonplaceholder.typicode.com/posts", {
-			method: "POST",
-			body: JSON.stringify({
-				title: "foo",
-				body: "bar",
-				userId: 1,
-			}),
-			headers: {
-				"Content-type": "application/json; charset=UTF-8",
-			},
-		});
+	const methods = useForm({ defaultValues: initialValues });
 
-		if (!post.ok) {
-			throw Error(post.statusText);
-		}
-		// setOpen(false);
-		handleClose();
-		console.log("result send to server");
+	const { handleSubmit, reset, control, setValue } = methods;
 
-		// .then((response) => response.json())
-		// .then((json) => console.log(json));
-	};
+	// const sendData = async (formData) => {
+	// 	let post = await fetch("https://jsonplaceholder.typicode.com/posts", {
+	// 		method: "POST",
+	// 		body: JSON.stringify({
+	// 			title: "foo",
+	// 			body: "bar",
+	// 			userId: 1,
+	// 		}),
+	// 		headers: {
+	// 			"Content-type": "application/json; charset=UTF-8",
+	// 		},
+	// 	});
 
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		debugger;
-		sendData(formValues);
-		// formData.append('json1', JSON.stringify(jsonData1));
+	// 	if (!post.ok) {
+	// 		throw Error(post.statusText);
+	// 	}
+	// 	// setOpen(false);
+	// 	handleClose();
+	// 	console.log("result send to server");
 
-		// fetch("https://jsonplaceholder.typicode.com/posts", {
-		//   method: "POST",
-		//   body: formData,
-		//   headers: {
-		//     "Content-type": "application/json; charset=UTF-8",
-		//   },
-		// })
-		//   .then((response) => response.json())
-		//   .then((json) => console.log(json));
-	};
+	// 	// .then((response) => response.json())
+	// 	// .then((json) => console.log(json));
+	// };
 
-	const setReportValue = (reportName) => {
-		setFormValues((prev) => ({ ...prev, reportName }));
-	};
+	// const handleSubmit = (e) => {
+	// 	e.preventDefault();
+	// 	debugger;
+	// 	sendData(formValues);
+	// 	// formData.append('json1', JSON.stringify(jsonData1));
 
-	const setMonthValue = (month) => {
-		setFormValues((prev) => ({ ...prev, month }));
-	};
+	// 	// fetch("https://jsonplaceholder.typicode.com/posts", {
+	// 	//   method: "POST",
+	// 	//   body: formData,
+	// 	//   headers: {
+	// 	//     "Content-type": "application/json; charset=UTF-8",
+	// 	//   },
+	// 	// })
+	// 	//   .then((response) => response.json())
+	// 	//   .then((json) => console.log(json));
+	// };
+
+	// const setReportValue = (reportName) => {
+	// 	setFormValues((prev) => ({ ...prev, reportName }));
+	// };
+
+	// const setMonthValue = (month) => {
+	// 	setFormValues((prev) => ({ ...prev, month }));
+	// };
 
 	const setNameValue = () => {};
 
@@ -225,27 +210,28 @@ function WorkReports() {
 				<Typography variant='span'>Выберите табель</Typography>
 				<HelpTooltip />
 			</Box>
-			<Box
-				component='form'
-				onSubmit={handleSubmit}
-				sx={{ width: "50vw" }}
-			>
-				<Grid container spacing={2}>
-					<Grid item sm={6}>
-						<ReportSelect
-							reportName={formValues.reportName}
-							setReportName={setReportValue}
-						/>
-					</Grid>
+			<form>
+				<Box sx={{ width: "50vw" }}>
+					<Grid container spacing={2}>
+						<Grid item sm={6}>
+							<ReportSelect
+								name='reportType'
+								control={control}
+								label='Выберите табель'
+								setValue={setValue}
+							/>
+						</Grid>
 
-					<Grid item sm={6}>
-						<MonthSelect
-							setMonth={setMonthValue}
-							month={formValues.month}
-						/>
-					</Grid>
-					<Grid item sm={6}>
-						{/* {formValues.reportName == "Табель сотрудника" ? (
+						<Grid item sm={6}>
+							<MonthSelect
+								name='month'
+								control={control}
+								label='Выберите месяц'
+								setValue={setValue}
+							/>
+						</Grid>
+						<Grid item sm={6}>
+							{/* {formValues.reportName == "Табель сотрудника" ? (
 							<NamesSelector />
 						) : null}
 
@@ -266,16 +252,20 @@ function WorkReports() {
 								<DepartmentCheckbox />
 							</Box>
 						) : null} */}
-						<AutocompleteTemp
-							endpoint='Names'
-							setSelectData={setNameValue}
-						/>
+							<AutocompleteTemp
+								endpoint='Names'
+								setSelectData={setNameValue}
+							/>
+						</Grid>
+						<Button
+							onClick={() => handleSubmit()}
+							variant='contained'
+						>
+							Подготовить
+						</Button>
 					</Grid>
-					{/* <Button type='submit' variant='contained'>
-						Подготовить
-					</Button> */}
-				</Grid>
-			</Box>
+				</Box>
+			</form>
 		</Stack>
 	);
 }
